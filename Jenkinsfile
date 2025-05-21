@@ -11,10 +11,11 @@ pipeline {
     stages {
         stage('SCM Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/YourUsername/static-site-java.git'
+                git branch: 'main', credentialsId: 'Github_Jenkins_Connection', url: 'git@github.com:VSD065/static-java-website.git'
             }
         }
 
+        /*
         stage('Build with Maven') {
             steps {
                 sh 'mvn clean package'
@@ -52,5 +53,6 @@ pipeline {
                 }
             }
         }
+        */
     }
 }
