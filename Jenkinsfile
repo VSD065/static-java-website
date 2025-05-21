@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         SONARQUBE = 'SonarQube-Server' // Name of your SonarQube server in Jenkins config
-        NEXUS_URL = 'http://<nexus-server>:8081/repository/maven-releases/'
-        TOMCAT_URL = 'http://<tomcat-server>:8080/manager/text'
-        TOMCAT_CRED = credentials('tomcat-user-pass')
+        //NEXUS_URL = 'http://<nexus-server>:8081/repository/maven-releases/'
+        //TOMCAT_URL = 'http://<tomcat-server>:8080/manager/text'
+        //TOMCAT_CRED = credentials('tomcat-user-pass')
     }
 
     stages {
