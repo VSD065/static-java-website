@@ -1,12 +1,14 @@
 pipeline {
     agent any
 
+    /*
     environment {
         SONARQUBE = 'SonarQube-Server'
         NEXUS_URL = 'http://<nexus-server>:8081/repository/maven-releases/'
         TOMCAT_URL = 'http://<tomcat-server>:8080/manager/text'
         TOMCAT_CRED = credentials('tomcat-user-pass')
     }
+    */
 
     stages {
         stage('SCM Checkout') {
