@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE = 'SonarQube-Server' // Jenkins SonarQube server name (configure under "Configure System")
+        SONARQUBE = 'SonarQube-Server' // Jenkins SonarQube server name (configured under Manage Jenkins > Configure System)
     }
 
     stages {
@@ -26,33 +26,11 @@ pipeline {
 
         stage('Code Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'sonarqube-user-token', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv("${SONARQUBE}") {
-                        sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
-                    }
+                withSonarQubeEnv("${SONARQUBE}") {
+                    // Make sure the sonar.token is configured in Jenkins credentials
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
-
-        // Optional: Uncomment if you want to include artifact upload or deployment
-        /*
-        stage('Upload Artifact to Nexus') {
-            steps {
-                script {
-                    def fileName = sh(script: "ls target/*.war", returnStdout: true).trim()
-                    sh "curl -v -u admin:admin123 --upload-file ${fileName} ${NEXUS_URL}"
-                }
-            }
-        }
-
-        stage('Deploy to Tomcat') {
-            steps {
-                script {
-                    def war = sh(script: "ls target/*.war", returnStdout: true).trim()
-                    sh "curl --upload-file ${war} --user ${TOMCAT_CRED_USR}:${TOMCAT_CRED_PSW} ${TOMCAT_URL}/deploy?path=/static-site-java"
-                }
-            }
-        }
-        */
     }
 }
