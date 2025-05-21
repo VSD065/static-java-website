@@ -2,10 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE = 'SonarQube-Server' // Name of your SonarQube server in Jenkins config
-        //NEXUS_URL = 'http://<nexus-server>:8081/repository/maven-releases/'
-        //TOMCAT_URL = 'http://<tomcat-server>:8080/manager/text'
-        //TOMCAT_CRED = credentials('tomcat-user-pass')
+        SONARQUBE = 'SonarQube-Server' // Jenkins SonarQube server name (configure under "Configure System")
     }
 
     stages {
@@ -29,13 +26,15 @@ pipeline {
 
         stage('Code Analysis') {
             steps {
-                withSonarQubeEnv("${SONARQUBE}") {
-                    // This command triggers the SonarQube analysis using Maven
-                    sh 'mvn sonar:sonar'
+                withCredentials([string(credentialsId: 'sonarqube-user-token', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv("${SONARQUBE}") {
+                        sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+                    }
                 }
             }
         }
 
+        // Optional: Uncomment if you want to include artifact upload or deployment
         /*
         stage('Upload Artifact to Nexus') {
             steps {
