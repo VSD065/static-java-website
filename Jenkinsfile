@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE = 'SonarQube-Server' // Jenkins SonarQube server name (configured under Manage Jenkins > Configure System)
+        SONARQUBE = 'SonarQube-Server' // Jenkins SonarQube server name
     }
 
     stages {
@@ -26,9 +26,10 @@ pipeline {
 
         stage('Code Analysis') {
             steps {
-                withSonarQubeEnv("${SONARQUBE}") {
-                    // Make sure the sonar.token is configured in Jenkins credentials
-                    sh 'mvn sonar:sonar'
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv("${SONARQUBE}") {
+                        sh 'mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN'
+                    }
                 }
             }
         }
