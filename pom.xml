@@ -5,7 +5,8 @@
 
     <groupId>com.example</groupId>
     <artifactId>static-site-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version> <!-- Make sure this is not a SNAPSHOT -->
+
     <packaging>war</packaging>
 
     <build>
@@ -27,8 +28,25 @@
                     <target>17</target>
                 </configuration>
             </plugin>
+
+            <!-- Maven Deploy Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <altDeploymentRepository>nexus::default::http://13.200.112.50:8081/repository/vsd-maven-repo/</altDeploymentRepository>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <url>http://13.200.112.50:8081/repository/vsd-maven-repo/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>

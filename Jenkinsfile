@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         SONARQUBE = 'SonarQube-Server' // Jenkins SonarQube server name
+        NEXUS_URL = 'http://13.200.112.50:8081/repository/vsd-maven-repo/'
     }
 
     stages {
@@ -30,6 +31,19 @@ pipeline {
                     withSonarQubeEnv("${SONARQUBE}") {
                         sh 'mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN'
                     }
+                }
+            }
+        }
+
+        stage('Deploy to Nexus') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                    sh '''
+                        mvn deploy \
+                        -DaltDeploymentRepository=nexus::default::$NEXUS_URL \
+                        -Dnexus.username=$NEXUS_USER \
+                        -Dnexus.password=$NEXUS_PASS
+                    '''
                 }
             }
         }
