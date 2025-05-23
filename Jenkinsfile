@@ -15,7 +15,8 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean package'
+                // Builds WAR with consistent name
+                sh 'mvn clean package -DfinalName=static-site-java'
             }
         }
 
@@ -63,9 +64,13 @@ EOF
             steps {
                 withCredentials([usernamePassword(credentialsId: 'tomcat-credentials', usernameVariable: 'TOMCAT_USER', passwordVariable: 'TOMCAT_PASS')]) {
                     sh """
-                        curl -v --upload-file target/static-site-java-1.0.war \\
+                        echo 'Undeploying existing application...'
+                        curl --silent --user $TOMCAT_USER:$TOMCAT_PASS "http://15.207.96.47:8080/manager/text/undeploy?path=/static-site-java"
+
+                        echo 'Deploying updated WAR file...'
+                        curl --silent --upload-file target/static-site-java.war \\
                              --user $TOMCAT_USER:$TOMCAT_PASS \\
-                             http://15.207.96.47:8080/manager/text/deploy?path=/static-site-java&update=true
+                             "http://15.207.96.47:8080/manager/text/deploy?path=/static-site-java"
                     """
                 }
             }
