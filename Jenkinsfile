@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE = 'SonarQube-Server' // Jenkins SonarQube server name
+        SONARQUBE = 'SonarQube-Server'
         NEXUS_URL = 'http://13.200.112.50:8081/repository/vsd-maven-repo/'
     }
 
@@ -55,6 +55,18 @@ EOF
 
                         mvn deploy -DskipTests -s settings.xml
                     '''
+                }
+            }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'tomcat-credentials', usernameVariable: 'TOMCAT_USER', passwordVariable: 'TOMCAT_PASS')]) {
+                    sh """
+                        curl -v --upload-file target/static-site-java-1.0.war \\
+                             --user $TOMCAT_USER:$TOMCAT_PASS \\
+                             http://15.207.96.47:8080/manager/text/deploy?path=/static-site-java&update=true
+                    """
                 }
             }
         }
