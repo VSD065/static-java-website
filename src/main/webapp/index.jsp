@@ -23,7 +23,7 @@
 </head>
 <body>
     <h1>Welcome to My Website</h1>
-    <p><strong>Name:</strong> Dharampal Singh Dhillon</p>
+    <p><strong>Name:</strong> Dharampal Singh Dhillon Dacher</p>
     <p><strong>Date of Birth:</strong> April 11, 1994</p>
     <p><strong>Age:</strong> 31</p>
     <p><strong>College Name:</strong> Lovely Professional University</p>
